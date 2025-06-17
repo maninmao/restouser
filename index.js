@@ -105,7 +105,7 @@ app.get('/viewbookings', (req, res) => {
     console.log('INSIDE VIEW BOOKINGS API...');
     const { phonenumber } = req.query;
 
-    BookingModel.find({ phonenumber })
+    BookingModel.find({ phonenumber:parseInt(req.body.phonenumber) })
         .then(bookings => {
             if (bookings.length === 0) {
                 return res.status(404).send('<html><body>No bookings found.</body></html>');
