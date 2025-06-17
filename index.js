@@ -102,16 +102,33 @@ app.delete('/cancelbooking', async (req, res) => {
 
 //VIEW ALL BOOKINGS API
 app.get('/viewbookings', (req, res) => {
-    console.log('INSIDE VIEW BOOKINGS API...');
-    const { phonenumber } = req.query;
+    // console.log('INSIDE VIEW BOOKINGS API...');
+    // const { phonenumber } = req.body;
 
-    BookingModel.find({ phonenumber:parseInt(req.body.phonenumber) })
+    console.log('INSIDE VIEW BOOKINGS API...', req.body);
+    const { name } = req.body;
+
+    // Check if name is provided
+    if (!name) {
+        return res.status(400).send('<html><body>Name is required.</body></html>');
+    }
+
+    // Query the database using the name
+    BookingModel.find({ name: name }) // Use string comparison for name
         .then(bookings => {
+            console.log('Found bookings:', bookings);
             if (bookings.length === 0) {
                 return res.status(404).send('<html><body>No bookings found.</body></html>');
             }
             res.json(bookings);
         })
+    // BookingModel.find({ phonenumber:parseInt(req.body.phonenumber) })
+    //     .then(bookings => {
+    //         if (bookings.length === 0) {
+    //             return res.status(404).send('<html><body>No bookings found.</body></html>');
+    //         }
+    //         res.json(bookings);
+    //     })
         .catch(err => {
             console.error('Error fetching bookings:', err);
             res.status(500).send('<html><body>Error fetching bookings.</body></html>');
